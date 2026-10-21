@@ -2,9 +2,9 @@
   "rules": {
     "presencia_mockups": {
       "$archivo": {
-        ".read": "auth != null && auth.token.email_verified == true && auth.token.email.matches(/.*@(hitss|anava)[.]com$/i)",
+        ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase().endsWith('@hitss.com') || auth.token.email.toLowerCase().endsWith('@anava.com'))",
         "$uid": {
-          ".write": "auth != null && auth.uid == $uid && auth.token.email_verified == true && auth.token.email.matches(/.*@(hitss|anava)[.]com$/i)"
+          ".write": "auth != null && auth.uid == $uid && auth.token.email_verified == true && (auth.token.email.toLowerCase().endsWith('@hitss.com') || auth.token.email.toLowerCase().endsWith('@anava.com'))"
         }
       }
     }
