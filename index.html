@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editor de mockups</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23c8102e'/><rect x='6' y='6' width='9' height='9' rx='2' fill='white'/><circle cx='21.5' cy='10.5' r='4.5' fill='white'/><rect x='6' y='18' width='20' height='8' rx='2' fill='white' opacity='.7'/></svg>">
+  <script>try { if (localStorage.getItem('kanban:tema') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch {}</script>
+  <script>
+    // Siempre carga la última versión publicada (GitHub Pages deja los archivos en caché 10 minutos).
+    // Si se agrega un archivo .js nuevo, súmalo a esta lista.
+    (() => {
+      const v = Date.now();
+      const archivos = ['config.js', 'js/principal.js', 'js/util.js', 'js/sesion.js', 'js/almacen.js', 'js/presencia.js',
+        'js/figuras.js', 'js/componentes.js', 'js/editor.js', 'js/paneles.js', 'js/archivos.js', 'js/presentar.js', 'js/exportar.js'];
+      const mapa = { imports: Object.fromEntries(archivos.map(f => [new URL(f, location.href).href, `${new URL(f, location.href).href}?v=${v}`])) };
+      const im = document.createElement('script');
+      im.type = 'importmap';
+      im.textContent = JSON.stringify(mapa);
+      document.currentScript.after(im);
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = `styles.css?v=${v}`;
+      im.after(css);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Open+Sans:ital,wght@0,300..800;1,400&family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:ital,wght@0,300..800;1,400&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Nunito:ital,wght@0,300..800;1,400&family=Raleway:ital,wght@0,300..800;1,400&family=Playfair+Display:ital,wght@0,400..800;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Source+Code+Pro:wght@300..800&display=swap">
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js" defer></script>
+</head>
+<body data-vista="archivos">
+  <header class="topbar">
+    <button id="irArchivos" class="marca" type="button" title="Ver todos los archivos">
+      <span class="marca-icono" aria-hidden="true"></span><span>Mockups</span>
+    </button>
+    <div class="contexto" data-de="editor" hidden>
+      <span class="separador" aria-hidden="true">/</span>
+      <input id="nombreArchivo" class="nombre-archivo" aria-label="Nombre del archivo" maxlength="80" spellcheck="false">
+      <span id="estadoGuardado" class="estado"></span>
+    </div>
+    <span class="espacio"></span>
+    <div id="avatares" class="avatares" data-de="editor" hidden></div>
+    <button id="btnCompartir" class="btn" type="button" data-de="editor" hidden>Compartir</button>
+    <button id="btnPresentar" class="btn" type="button" data-de="editor" hidden title="Ver el prototipo (Shift+Espacio)">▶ Presentar</button>
+    <button id="accessBtn" class="btn" type="button" hidden>Accesos</button>
+    <button id="themeBtn" class="btn theme-btn" type="button"></button>
+    <button id="userChip" class="user-chip" type="button" title="Mi cuenta"></button>
+  </header>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <!-- ===== Lista de archivos ===== -->
+  <main id="vistaArchivos" class="vista-archivos" data-de="archivos">
+    <div class="archivos-cab">
+      <h1>Archivos</h1>
+      <input id="buscarArchivo" type="search" placeholder="Buscar archivo…" aria-label="Buscar archivo">
+      <select id="ordenArchivos" aria-label="Ordenar">
+        <option value="recientes">Modificados recientemente</option>
+        <option value="nombre">Por nombre</option>
+        <option value="mios">Creados por mí</option>
+      </select>
+    </div>
+    <section class="nuevo-archivo">
+      <h2>Empezar un archivo nuevo</h2>
+      <div id="plantillas" class="plantillas"></div>
+    </section>
+    <div id="listaArchivos" class="lista-archivos"><p class="muted">Cargando archivos…</p></div>
+  </main>
+
+  <!-- ===== Editor ===== -->
+  <main id="vistaEditor" class="vista-editor" data-de="editor" hidden>
+    <aside id="panelIzq" class="panel izq">
+      <div class="pestanas" role="tablist">
+        <button type="button" data-pest="capas" class="activa">Capas</button>
+        <button type="button" data-pest="componentes">Componentes</button>
+      </div>
+      <div class="panel-cuerpo" data-panel="capas">
+        <section class="sec-paginas">
+          <div class="sec-titulo"><span>Páginas</span><button id="nuevaPagina" class="icon-btn sm" type="button" title="Nueva página">＋</button></div>
+          <ul id="listaPaginas" class="lista-paginas"></ul>
+        </section>
+        <section class="sec-capas">
+          <div class="sec-titulo"><span>Capas</span></div>
+          <ul id="listaCapas" class="lista-capas" role="tree"></ul>
+        </section>
+      </div>
+      <div class="panel-cuerpo" data-panel="componentes" hidden>
+        <input id="buscarComponente" type="search" placeholder="Buscar componente…" aria-label="Buscar componente">
+        <p class="hint">Haz clic para agregarlo o arrástralo al lienzo.</p>
+        <div id="listaComponentes" class="lista-componentes"></div>
+      </div>
+    </aside>
+
+    <div id="lienzo" class="lienzo" tabindex="0" aria-label="Lienzo">
+      <div id="mundo" class="mundo"></div>
+      <div id="fantasmas" class="mundo fantasmas" aria-hidden="true"></div>
+      <div id="capaUI" class="capa-ui" aria-hidden="true"></div>
+      <div id="cursores" class="cursores" aria-hidden="true"></div>
+      <div id="barraHerr" class="barra-herr" role="toolbar" aria-label="Herramientas"></div>
+      <div class="zoom-ctrl">
+        <button type="button" id="zoomMenos" title="Alejar (−)">−</button>
+        <button type="button" id="zoomValor" title="Opciones de zoom">100%</button>
+        <button type="button" id="zoomMas" title="Acercar (+)">＋</button>
+      </div>
+      <div id="siguiendo" class="siguiendo" hidden></div>
+    </div>
+
+    <aside id="panelDer" class="panel der">
+      <div class="pestanas" role="tablist">
+        <button type="button" data-pest="diseno" class="activa">Diseño</button>
+        <button type="button" data-pest="prototipo">Prototipo</button>
+        <button type="button" data-pest="codigo">Código</button>
+      </div>
+      <div id="propiedades" class="panel-cuerpo propiedades"></div>
+    </aside>
+  </main>
+
+  <!-- Modo Presentar (prototipo) -->
+  <div id="presentacion" class="presentacion" hidden>
+    <div class="pres-barra">
+      <select id="presMarco" aria-label="Marco"></select>
+      <span class="hint">Haz clic en los elementos con enlace · ← → cambia de marco · Esc para salir</span>
+      <button id="presCerrar" class="btn" type="button">Cerrar</button>
+    </div>
+    <div id="presEscena" class="pres-escena"></div>
+  </div>
+
+  <!-- Pantalla de inicio de sesión (solo si config.js activa login) -->
+  <div id="loginGate" class="login-gate" hidden>
+    <div class="login-box">
+      <h1>Editor de mockups</h1>
+      <p>Entra con tu correo <strong id="loginDomain"></strong> para ver y editar los mockups.</p>
+      <form id="loginEmailForm" class="login-form" hidden>
+        <input id="loginEmail" type="email" required placeholder="tu.correo@hitss.com" autocomplete="email" aria-label="Correo de la empresa">
+        <button id="loginSend" class="btn primary">Enviarme el enlace para entrar</button>
+      </form>
+      <div id="loginMs" hidden>
+        <button id="loginBtn" type="button" class="btn primary ms-btn">
+          <svg width="18" height="18" viewBox="0 0 21 21" aria-hidden="true"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+          Entrar con Microsoft
+        </button>
+      </div>
+      <p id="loginMsg" class="login-msg" role="alert"></p>
+      <button id="loginSignOut" class="btn" hidden>Usar otra cuenta</button>
+    </div>
+  </div>
+
+  <!-- Registro de accesos (solo administradores) -->
+  <dialog id="accessDialog" class="access-dialog">
+    <div class="dlg-head">
+      <h2>Control de acceso</h2>
+      <form method="dialog"><button class="icon-btn close" aria-label="Cerrar">✕</button></form>
+    </div>
+    <p class="hint">Quién pidió el enlace para entrar, quién entró y quién intentó con un correo no permitido.</p>
+    <div id="accessBody"></div>
+  </dialog>
+
+  <!-- Atajos de teclado -->
+  <dialog id="atajosDialog" class="atajos-dialog">
+    <div class="dlg-head">
+      <h2>Atajos de teclado</h2>
+      <form method="dialog"><button class="icon-btn close" aria-label="Cerrar">✕</button></form>
+    </div>
+    <div id="atajosBody"></div>
+  </dialog>
+
+  <!-- Ventana de pregunta / confirmación -->
+  <dialog id="askDialog" class="ask-dialog">
+    <form method="dialog" id="askForm">
+      <h2 id="askTitle"></h2>
+      <p id="askHint" class="hint"></p>
+      <input id="askInput" autocomplete="off" maxlength="200">
+      <div class="ask-actions">
+        <button value="cancel" formnovalidate class="btn">Cancelar</button>
+        <button value="ok" id="askOk" class="btn primary">Aceptar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <input id="elegirImagen" type="file" accept="image/*" multiple hidden>
+  <input id="elegirJson" type="file" accept=".json,application/json" hidden>
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script type="module" src="js/principal.js"></script>
+</body>
+</html>

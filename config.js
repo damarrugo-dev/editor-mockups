@@ -1,16 +1,9 @@
-// Conexión a la base de datos compartida (Firebase). Es la misma del Tablero Kanban y del Diagrama de Gantt:
-// se entra con la misma cuenta y el registro de accesos es uno solo.
+// Conexión a la base de datos del editor (Firebase). Es un proyecto de Firebase propio del editor.
 // Si se pone en null, el editor funciona en "modo de prueba" (solo guarda en este navegador;
 // dos pestañas del mismo navegador se ven entre sí, para probar la edición en equipo).
-// Esta configuración es pública por diseño: los datos los protegen las reglas de firestore.rules.
-export const firebaseConfig = {
-  apiKey: "AIzaSyA0c0X87PBi3a21YJOkH970xE12OHiaY_Y",
-  authDomain: "tablero-kanban-f5f28.firebaseapp.com",
-  projectId: "tablero-kanban-f5f28",
-  storageBucket: "tablero-kanban-f5f28.firebasestorage.app",
-  messagingSenderId: "670983517801",
-  appId: "1:670983517801:web:f2918705cfdc983870d4f8"
-};
+// Esta configuración es pública por diseño: los datos los protegen las reglas de firestore.rules
+// y database.rules.json.
+export const firebaseConfig = null;
 
 // Inicio de sesión: solo entran personas con correo de la empresa.
 //   metodo: "correo"     → llega un enlace al correo | "microsoft" → cuenta de Microsoft
@@ -22,3 +15,7 @@ export const login = {
   dominios: ["hitss.com", "anava.com"],
   administradores: ["marrugod@hitss.com"],
 };
+
+// Dirección de la Realtime Database del mismo proyecto de Firebase (para cursores y sombras fluidos).
+// Se ve en Firebase → Realtime Database, arriba de los datos. En null, la presencia va por Firestore (más lenta).
+export const presenciaURL = "https://editor-mockups-default-rtdb.firebaseio.com";

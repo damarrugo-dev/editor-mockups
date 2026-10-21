@@ -1,7 +1,6 @@
 rules_version = '2';
-// Reglas de la base de datos compartida por el Tablero Kanban, el Diagrama de Gantt y el Editor de mockups
-// (proyecto de Firebase "tablero-kanban"). Se pegan en Firebase → Firestore Database → Reglas.
-// Ojo: es UN solo archivo para las tres páginas. Si quitas un bloque, esa página deja de funcionar.
+// Reglas de la base de datos del Editor de mockups (mismo inicio de sesión y control de acceso del Tablero Kanban).
+// Se pegan en Firebase → Firestore Database → Reglas.
 service cloud.firestore {
   match /databases/{database}/documents {
     // Solo personas que iniciaron sesión con un correo de la empresa (enlace al correo o Microsoft).
@@ -30,23 +29,6 @@ service cloud.firestore {
         && d.tablero is string && d.tablero.size() <= 60
         && d.navegador is string && d.navegador.size() <= 60
         && (!('nombre' in d) || (d.nombre is string && d.nombre.size() <= 100));
-    }
-
-    // Kanban: todos los de la empresa ven y mueven las tarjetas
-    match /tableros/{tablero} {
-      allow read, write: if esDeLaEmpresa();
-      match /tarjetas/{tarjeta} {
-        allow read, write: if esDeLaEmpresa();
-      }
-    }
-
-    // Gantt: todos los de la empresa ven y editan todos los proyectos (igual que el Kanban);
-    // solo quien creó un proyecto puede borrarlo
-    match /gantt_proyectos/{proyecto} {
-      allow read: if esDeLaEmpresa();
-      allow create: if esDeLaEmpresa() && request.resource.data.propietario == correo();
-      allow update: if esDeLaEmpresa() && request.resource.data.propietario == resource.data.propietario;
-      allow delete: if esDeLaEmpresa() && correo() == resource.data.propietario;
     }
 
     // Editor de mockups: todos los de la empresa ven y editan todos los archivos;
