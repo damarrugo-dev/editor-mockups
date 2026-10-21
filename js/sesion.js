@@ -86,7 +86,18 @@ export async function conectar() {
   const { initializeApp } = await import(`${GS}/firebase-app.js`);
   const fs = await import(`${GS}/firebase-firestore.js`);
   const app = initializeApp(firebaseConfig);
-  const db = fs.getFirestore(app);
+  // Copia local de los datos en el navegador (se abre al instante la segunda vez y los cambios propios
+  // se ven sin esperar al servidor). Si el navegador no lo permite, se usa la conexión normal.
+  let db;
+  try {
+    db = fs.initializeFirestore(app, {
+      localCache: fs.persistentLocalCache({ tabManager: fs.persistentMultipleTabManager() }),
+      experimentalAutoDetectLongPolling: true,
+    });
+  } catch (err) {
+    console.warn('Sin copia local de Firestore', err);
+    db = fs.getFirestore(app);
+  }
   Object.assign(sesion, { modo: 'firebase', fs, db, app });
   if (login) {
     accessLog = createAccessLog(fs, db);

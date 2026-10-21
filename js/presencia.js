@@ -9,7 +9,7 @@ export async function conectarPresencia(sesion, url) {
   const rt = await import(`https://www.gstatic.com/firebasejs/${VERSION_FIREBASE}/firebase-database.js`);
   const db = rt.getDatabase(sesion.app, url);
   return {
-    intervalo: 50,
+    intervalo: 33, // ~30 veces por segundo: el cursor y las sombras se mueven fluidos
     abrir(archivo, alPresencia) {
       const sala = rt.ref(db, `presencia_mockups/${archivo}`);
       const mia = rt.ref(db, `presencia_mockups/${archivo}/${sesion.uid}`);

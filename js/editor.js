@@ -44,8 +44,18 @@ export const miColor = () => colorDe(sesion.correo || me());
 export function obj(id) {
   const o = id === E.borrador?.id ? E.borrador : E.objetos.get(id);
   if (!o) return null;
-  const t = E.temporal.get(id);
+  const t = E.temporal.get(id) || pendiente(id);
   return t ? { ...o, ...t } : o;
+}
+// Cuando otra persona suelta lo que arrastraba (o termina de escribir), su sombra desaparece al instante
+// pero el cambio guardado tarda un poco más en llegar. Mientras tanto se muestra ya en su lugar nuevo,
+// para que la figura no "salte" de vuelta a la posición vieja.
+const pendientes = new Map(); // id → { cambios, hasta }
+function pendiente(id) {
+  const p = pendientes.get(id);
+  if (!p) return null;
+  if (Date.now() > p.hasta) { pendientes.delete(id); return null; }
+  return p.cambios;
 }
 export const porOrden = (a, b) => (a.orden || 0) - (b.orden || 0);
 export function objetosPagina(pagina = E.pagina) {
@@ -171,6 +181,7 @@ function limpiarSeleccion() {
 // ---------- Cambios de los demás ----------
 export function recibirObjetos(cambios) {
   for (const c of cambios) {
+    pendientes.delete(c.id);
     if (c.datos === null) { E.objetos.delete(c.id); E.sel.delete(c.id); }
     else if (c.datos.tipo) E.objetos.set(c.id, c.datos);
   }
@@ -179,7 +190,18 @@ export function recibirObjetos(cambios) {
 }
 export function recibirPresencia(lista) {
   const ahora = Date.now();
-  E.otros = new Map(lista.filter(p => p && p.nombre && (!p.t || ahora - p.t < 120000)).map(p => [p.uid, p]));
+  const nuevos = new Map(lista.filter(p => p && p.nombre && (!p.t || ahora - p.t < 120000)).map(p => [p.uid, p]));
+  for (const [uid, antes] of E.otros) {
+    const ahoraP = nuevos.get(uid);
+    for (const [id, d] of Object.entries(antes.arrastre || {})) {
+      if (!ahoraP?.arrastre?.[id] && E.objetos.has(id) && !d.tipo) pendientes.set(id, { cambios: d, hasta: ahora + 4000 });
+    }
+    if (antes.texto && ahoraP?.texto?.id !== antes.texto.id && E.objetos.has(antes.texto.id)) {
+      pendientes.set(antes.texto.id, { cambios: { texto: antes.texto.valor }, hasta: ahora + 4000 });
+    }
+  }
+  if (pendientes.size) setTimeout(dibujar, 4100);
+  E.otros = nuevos;
   if (E.siguiendo) seguirVista();
   dibujar();
   emitir('presencia');
@@ -688,6 +710,7 @@ function alSoltar(e) {
   if (a.modo === 'redimensionar') terminarTemporal(a.ids);
   if (a.modo === 'dibujar') terminarDibujo(a, aMundo(e.clientX, e.clientY));
   arrastreVivo = null;
+  ultimoEnvio = 0; // al soltar se avisa de inmediato, sin esperar el siguiente envío
   enviarPresencia();
   dibujar();
   emitir('seleccion');
@@ -702,6 +725,7 @@ function pellizco() {
 // --- Mover ---
 function iniciarMovimiento(a, duplicar) {
   a.moviendo = true;
+  ultimoEnvio = 0;
   let ids = [...E.sel].filter(id => !obj(id)?.bloqueado);
   if (duplicar) {
     // Alt + arrastrar: se mueve una copia
@@ -977,6 +1001,7 @@ export function terminarTexto() {
       if (paso) paso.despues = [[id, nuevo]];
     } else confirmar([[id, nuevo]]);
   }
+  ultimoEnvio = 0;
   enviarPresencia();
   lienzo.focus({ preventScroll: true });
   emitir('seleccion');
