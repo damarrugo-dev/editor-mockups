@@ -3,7 +3,15 @@
 // dos pestañas del mismo navegador se ven entre sí, para probar la edición en equipo).
 // Esta configuración es pública por diseño: los datos los protegen las reglas de firestore.rules
 // y database.rules.json.
-export const firebaseConfig = null;
+export const firebaseConfig = {
+  apiKey: "AIzaSyAU06dxDokfut1lZM6yRcK9SdEQxbNCrY0",
+  authDomain: "editor-mockups.firebaseapp.com",
+  databaseURL: "https://editor-mockups-default-rtdb.firebaseio.com",
+  projectId: "editor-mockups",
+  storageBucket: "editor-mockups.firebasestorage.app",
+  messagingSenderId: "503169657093",
+  appId: "1:503169657093:web:d7811a55d09f6f8c686f6c"
+};
 
 // Inicio de sesión: solo entran personas con correo de la empresa.
 //   metodo: "correo"     → llega un enlace al correo | "microsoft" → cuenta de Microsoft
