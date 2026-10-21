@@ -147,19 +147,38 @@ kbd { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; background: var
 .plantilla-dibujo { width: 128px; height: 84px; border-radius: 8px; background: var(--surface-2); display: grid; place-items: center; font-size: 26px; color: var(--muted); }
 .plantilla-dibujo.blanco { background: linear-gradient(var(--muted), var(--muted)) center / 2px 26px no-repeat, linear-gradient(var(--muted), var(--muted)) center / 26px 2px no-repeat, var(--surface-2); }
 .plantilla-dibujo.inicio { background:
-  linear-gradient(#2563eb, #2563eb) 10px 8px / 24px 5px no-repeat,
-  linear-gradient(#cbd5e1, #cbd5e1) 70px 8px / 48px 5px no-repeat,
-  linear-gradient(#1c2230, #1c2230) 10px 24px / 60px 8px no-repeat,
-  linear-gradient(#94a3b8, #94a3b8) 10px 38px / 50px 4px no-repeat,
-  linear-gradient(#2563eb, #2563eb) 10px 50px / 26px 8px no-repeat,
-  linear-gradient(#cbd5e1, #cbd5e1) 76px 22px / 42px 38px no-repeat,
-  linear-gradient(#1c2230, #1c2230) 0 72px / 100% 12px no-repeat, #eff6ff; }
+  linear-gradient(#c8102e, #c8102e) 10px 8px / 24px 5px no-repeat,
+  linear-gradient(#f7c6cd, #f7c6cd) 70px 8px / 48px 5px no-repeat,
+  linear-gradient(#8a0b20, #8a0b20) 10px 24px / 60px 8px no-repeat,
+  linear-gradient(#e0485e, #e0485e) 10px 38px / 50px 4px no-repeat,
+  linear-gradient(#c8102e, #c8102e) 10px 50px / 26px 8px no-repeat,
+  linear-gradient(#f7c6cd, #f7c6cd) 76px 22px / 42px 38px no-repeat,
+  linear-gradient(#8a0b20, #8a0b20) 0 72px / 100% 12px no-repeat, #fff6f7; }
 .plantilla-dibujo.movil { background:
-  linear-gradient(#fff, #fff) 46px 6px / 36px 72px no-repeat,
-  linear-gradient(#2563eb, #2563eb) 52px 54px / 24px 6px no-repeat,
-  linear-gradient(#cbd5e1, #cbd5e1) 52px 30px / 24px 5px no-repeat,
-  linear-gradient(#cbd5e1, #cbd5e1) 52px 42px / 24px 5px no-repeat,
-  linear-gradient(#1c2230, #1c2230) 52px 18px / 18px 5px no-repeat, var(--surface-2); }
+  linear-gradient(#c8102e, #c8102e) 52px 54px / 24px 6px no-repeat,
+  linear-gradient(#f7c6cd, #f7c6cd) 52px 30px / 24px 5px no-repeat,
+  linear-gradient(#f7c6cd, #f7c6cd) 52px 42px / 24px 5px no-repeat,
+  linear-gradient(#8a0b20, #8a0b20) 52px 18px / 18px 5px no-repeat,
+  linear-gradient(#fff, #fff) 46px 6px / 36px 72px no-repeat, var(--surface-2); }
+.plantilla-dibujo.tablero { background:
+  linear-gradient(#8a0b20, #8a0b20) 0 0 / 22px 100% no-repeat,
+  linear-gradient(#fff, #fff) 30px 8px / 20px 14px no-repeat, linear-gradient(#fff, #fff) 54px 8px / 20px 14px no-repeat,
+  linear-gradient(#fff, #fff) 78px 8px / 20px 14px no-repeat, linear-gradient(#fff, #fff) 102px 8px / 20px 14px no-repeat,
+  linear-gradient(#c8102e, #c8102e) 34px 40px / 6px 18px no-repeat, linear-gradient(#e0485e, #e0485e) 44px 32px / 6px 26px no-repeat,
+  linear-gradient(#c8102e, #c8102e) 54px 44px / 6px 14px no-repeat, linear-gradient(#e0485e, #e0485e) 64px 36px / 6px 22px no-repeat,
+  linear-gradient(#fff, #fff) 80px 28px / 42px 30px no-repeat, linear-gradient(#fff, #fff) 30px 64px / 92px 14px no-repeat, #fdecee; }
+.plantilla-dibujo.seguimiento { background:
+  linear-gradient(#c8102e, #c8102e) 46px 6px / 36px 18px no-repeat,
+  linear-gradient(#f7c6cd, #f7c6cd) 49px 28px / 30px 18px no-repeat,
+  linear-gradient(#fff, #fff) 49px 50px / 30px 8px no-repeat,
+  linear-gradient(#e0485e, #e0485e) 51px 62px / 3px 12px no-repeat,
+  linear-gradient(#fff, #fff) 46px 6px / 36px 72px no-repeat, var(--surface-2); }
+.plantilla-dibujo.citas { background:
+  linear-gradient(#fff, #fff) 0 0 / 20px 100% no-repeat,
+  linear-gradient(#c8102e, #c8102e) 30px 20px / 14px 10px no-repeat, linear-gradient(#f7c6cd, #f7c6cd) 48px 32px / 14px 10px no-repeat,
+  linear-gradient(#fdecee, #fdecee) 66px 20px / 14px 10px no-repeat, linear-gradient(#c8102e, #c8102e) 48px 50px / 14px 10px no-repeat,
+  linear-gradient(#fff, #fff) 26px 12px / 60px 60px no-repeat,
+  linear-gradient(#c8102e, #c8102e) 94px 12px / 26px 8px no-repeat, linear-gradient(#fff, #fff) 94px 12px / 26px 60px no-repeat, #f6f1f2; }
 .lista-archivos { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
 .archivo { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); overflow: hidden; cursor: pointer; display: flex; flex-direction: column; }
 .archivo:hover, .archivo:focus-visible { border-color: var(--accent); box-shadow: 0 6px 20px rgba(0, 0, 0, .1); outline: none; }

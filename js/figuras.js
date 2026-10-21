@@ -230,6 +230,21 @@ export const ICONOS = {
   tarjeta: '<rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/>',
   enlace: '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
   grafica: '<path d="M18 20V10M12 20V4M6 20v-6"/>',
+  // Logística
+  camion: '<rect x="1" y="4" width="14" height="12" rx="1"/><path d="M15 8h4l3 3.5V16h-7z"/><circle cx="5.5" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/>',
+  paquete: '<path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/>',
+  barco: '<path d="M2 20c2 1.5 4 1.5 6 0 2 1.5 4 1.5 6 0 2 1.5 4 1.5 6 0"/><path d="M4 17l-1.5-5h19L20 17"/><path d="M6 12V7h12v5M10 7V4h4v3"/>',
+  contenedor: '<rect x="2" y="6" width="20" height="12" rx="1"/><path d="M6 9v6M10 9v6M14 9v6M18 9v6"/>',
+  ruta: '<circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19h9a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7h9"/>',
+  codigo: '<path d="M3 5v14M6 5v14M10 5v14M13 5v14M15 5v14M18 5v14M21 5v14"/>',
+  almacen: '<path d="M3 21V8l9-5 9 5v13"/><path d="M7 21v-8h10v8M7 17h10"/>',
+  alerta: '<path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
+  panel: '<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
+  subir: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
+  firma: '<path d="M3 17c3-6 5-9 6-8s-2 7 0 7 3-5 5-5-1 5 1 5 3-2 6-2"/><path d="M3 21h18"/>',
+  grua: '<path d="M5 21V4h15M5 4l5 5M10 4v5M16 4v5"/><rect x="13" y="9" width="6" height="4"/><path d="M2 21h7"/>',
+  escaner: '<path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"/>',
+  usuarios: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
 };
 export const NOMBRES_ICONOS = Object.keys(ICONOS);
 

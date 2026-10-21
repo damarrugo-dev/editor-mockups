@@ -16,7 +16,7 @@ export function iniciarArchivos(alm, abrir) {
   cont.textContent = '';
   for (const p of PLANTILLAS) {
     cont.append(h('button', { type: 'button', class: 'plantilla', onclick: () => crear(p) },
-      h('span', { class: 'plantilla-dibujo ' + (p.nombre === 'En blanco' ? 'blanco' : p.nombre === 'Página de inicio' ? 'inicio' : 'movil') }),
+      h('span', { class: 'plantilla-dibujo ' + (p.clase || '') }),
       h('span', {}, p.nombre)));
   }
   cont.append(h('button', { type: 'button', class: 'plantilla', onclick: importar },
