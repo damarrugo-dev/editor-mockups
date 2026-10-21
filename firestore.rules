@@ -1,0 +1,84 @@
+rules_version = '2';
+// Reglas de la base de datos compartida por el Tablero Kanban, el Diagrama de Gantt y el Editor de mockups
+// (proyecto de Firebase "tablero-kanban"). Se pegan en Firebase → Firestore Database → Reglas.
+// Ojo: es UN solo archivo para las tres páginas. Si quitas un bloque, esa página deja de funcionar.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Solo personas que iniciaron sesión con un correo de la empresa (enlace al correo o Microsoft).
+    // Si cambias los dominios aquí, cámbialos también en config.js (login.dominios).
+    function esDeLaEmpresa() {
+      return request.auth != null
+        && request.auth.token.email is string
+        && request.auth.token.email.lower().matches('.*@(hitss|anava)[.]com$')
+        // correo confirmado (enlace al correo) o cuenta de Microsoft
+        && (request.auth.token.email_verified == true
+            || request.auth.token.firebase.sign_in_provider == 'microsoft.com');
+    }
+    function correo() {
+      return request.auth.token.email.lower();
+    }
+    // Pueden ver el registro de accesos. Si cambias la lista, cámbiala también en config.js (login.administradores).
+    function esAdministrador() {
+      return esDeLaEmpresa() && correo() in ['marrugod@hitss.com'];
+    }
+    // Registro de un acceso: solo esos campos, con la hora del servidor
+    function registroValido() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['tipo', 'email', 'nombre', 'tablero', 'navegador', 'fecha'])
+        && d.fecha == request.time
+        && d.email is string && d.email.size() <= 200
+        && d.tablero is string && d.tablero.size() <= 60
+        && d.navegador is string && d.navegador.size() <= 60
+        && (!('nombre' in d) || (d.nombre is string && d.nombre.size() <= 100));
+    }
+
+    // Kanban: todos los de la empresa ven y mueven las tarjetas
+    match /tableros/{tablero} {
+      allow read, write: if esDeLaEmpresa();
+      match /tarjetas/{tarjeta} {
+        allow read, write: if esDeLaEmpresa();
+      }
+    }
+
+    // Gantt: todos los de la empresa ven y editan todos los proyectos (igual que el Kanban);
+    // solo quien creó un proyecto puede borrarlo
+    match /gantt_proyectos/{proyecto} {
+      allow read: if esDeLaEmpresa();
+      allow create: if esDeLaEmpresa() && request.resource.data.propietario == correo();
+      allow update: if esDeLaEmpresa() && request.resource.data.propietario == resource.data.propietario;
+      allow delete: if esDeLaEmpresa() && correo() == resource.data.propietario;
+    }
+
+    // Editor de mockups: todos los de la empresa ven y editan todos los archivos;
+    // solo quien creó un archivo (o un administrador) puede borrarlo
+    match /mockups/{archivo} {
+      allow read: if esDeLaEmpresa();
+      allow create: if esDeLaEmpresa() && request.resource.data.propietario == correo();
+      allow update: if esDeLaEmpresa() && request.resource.data.propietario == resource.data.propietario;
+      allow delete: if esDeLaEmpresa() && (correo() == resource.data.propietario || esAdministrador());
+
+      // Cada figura del archivo es un documento: dos personas pueden cambiar figuras distintas al tiempo
+      match /objetos/{objeto} {
+        allow read, write: if esDeLaEmpresa();
+      }
+      // Quién está conectado, dónde está su cursor y qué está arrastrando o escribiendo.
+      // Cada persona solo escribe su propia presencia.
+      match /presencia/{usuario} {
+        allow read: if esDeLaEmpresa();
+        allow write: if esDeLaEmpresa() && usuario == request.auth.uid;
+      }
+    }
+
+    match /accesos/{id} {
+      // Pedir el enlace o ser rechazado ocurre antes de iniciar sesión
+      allow create: if registroValido() && (
+        (request.resource.data.tipo in ['solicitud', 'rechazado'] && !('nombre' in request.resource.data))
+        || (request.resource.data.tipo == 'ingreso' && esDeLaEmpresa()
+            && request.resource.data.email == correo())
+      );
+      // Nadie puede cambiar ni borrar el registro; solo el administrador lo lee
+      allow read: if esAdministrador();
+      allow update, delete: if false;
+    }
+  }
+}
