@@ -427,6 +427,13 @@ dialog::backdrop { background: rgba(10, 14, 22, .5); }
   box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
 }
 
+/* Aviso de versión nueva */
+.aviso-version {
+  position: fixed; top: 60px; left: 50%; transform: translateX(-50%); z-index: 90;
+  display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 16px; border-radius: 12px;
+  background: var(--text); color: var(--bg); box-shadow: 0 8px 24px rgba(0, 0, 0, .25); font-weight: 600;
+}
+
 /* Inicio de sesión */
 .login-gate { position: fixed; inset: 0; z-index: 80; background: var(--bg); display: grid; place-items: center; padding: 16px; }
 .login-box {

@@ -1,5 +1,5 @@
 // Arranque: inicio de sesión, conexión a la base de datos y cambio entre la lista de archivos y el editor.
-import { $, toast } from './util.js';
+import { $, h, toast } from './util.js';
 import { conectar, sesion, preguntarNombreSiFalta } from './sesion.js';
 import { presenciaURL } from '../config.js';
 import { conectarPresencia } from './presencia.js';
@@ -117,5 +117,27 @@ function importarEnPagina() {
   };
   inp.click();
 }
+
+// Aviso de versión nueva: cada vez que se publica un cambio, version.txt cambia.
+// En la lista de archivos se recarga sola; en el editor se ofrece un botón (los cambios ya están guardados).
+let versionActual = null;
+async function revisarVersion() {
+  try {
+    const r = await fetch(`version.txt?t=${Date.now()}`, { cache: 'no-store' });
+    if (!r.ok) return;
+    const v = (await r.text()).trim();
+    if (versionActual === null) { versionActual = v; return; }
+    if (v === versionActual) return;
+    if (!E.archivoId) return location.reload();
+    if (document.querySelector('.aviso-version')) return;
+    const aviso = h('div', { class: 'aviso-version', role: 'status' },
+      'Hay una versión nueva del editor.',
+      h('button', { type: 'button', class: 'btn primary', onclick: () => { if (E.editando) return; location.reload(); } }, 'Actualizar ahora'));
+    document.body.append(aviso);
+  } catch {}
+}
+revisarVersion();
+setInterval(revisarVersion, 30000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') revisarVersion(); });
 
 arrancar();
