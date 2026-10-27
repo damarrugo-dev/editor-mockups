@@ -64,7 +64,7 @@ function dibujar() {
     return;
   }
   for (const a of lista) {
-    const tarjeta = h('article', { class: 'archivo', tabindex: 0, onclick: e => { if (!e.target.closest('button')) alAbrir(a.id); }, onkeydown: e => { if (e.key === 'Enter') alAbrir(a.id); } },
+    const tarjeta = h('article', { class: 'archivo', tabindex: 0, title: a.nombre || 'Sin nombre', onclick: e => { if (!e.target.closest('button')) alAbrir(a.id); }, onkeydown: e => { if (e.key === 'Enter') alAbrir(a.id); } },
       h('div', { class: 'archivo-mini' }, a.miniatura ? h('img', { src: a.miniatura, alt: '' }) : h('span', { class: 'sin-mini' }, (a.nombre || '?').slice(0, 1).toUpperCase())),
       h('div', { class: 'archivo-pie' },
         h('div', { class: 'archivo-txt' },
