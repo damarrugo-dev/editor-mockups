@@ -189,6 +189,18 @@ kbd { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; background: var
 .archivo-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .archivo-txt strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .archivo-txt .muted { font-size: 12px; }
+#listaArchivos { display: flex; flex-direction: column; gap: 18px; border-radius: 14px; }
+.carpeta { border: 1px solid var(--border); border-radius: 14px; padding: 6px 12px 14px; background: var(--surface-2); }
+.carpeta-cab { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.carpeta-nombre { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; border: 0; background: none; padding: 6px 4px; cursor: pointer; color: var(--text); font: inherit; text-align: left; }
+.carpeta-nombre strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.carpeta-flecha { width: 12px; color: var(--muted); }
+.carpeta-sueltos { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 6px 0 -6px; }
+.archivo.arrastrando { opacity: .4; }
+.archivo.soltar-antes { box-shadow: -4px 0 0 var(--accent); }
+.archivo.soltar-despues { box-shadow: 4px 0 0 var(--accent); }
+.archivo.soltar-agrupar { outline: 3px solid var(--accent); outline-offset: 2px; transform: scale(.97); }
+.carpeta.soltar-aqui, #listaArchivos.soltar-aqui { outline: 2px dashed var(--accent); outline-offset: 4px; }
 
 /* ---------- Editor ---------- */
 .vista-editor { flex: 1; min-height: 0; display: grid; grid-template-columns: 240px minmax(0, 1fr) 260px; }

@@ -60,6 +60,13 @@ class AlmacenLocal {
     this.avisar({ tipo: 'archivos' }, true);
     this.avisar({ tipo: 'archivo', id, datos: todos[id] }, true);
   }
+  // Orden y carpeta de la lista: no cuentan como modificación del archivo
+  async organizarArchivos(cambios) {
+    const todos = this.archivos();
+    for (const { id, parcial } of cambios) if (todos[id]) todos[id] = { ...todos[id], ...limpio(parcial) };
+    this.escribirClave('mockups:archivos', todos);
+    this.avisar({ tipo: 'archivos' }, true);
+  }
   async eliminarArchivo(id) {
     const todos = this.archivos();
     delete todos[id];
@@ -149,6 +156,11 @@ class AlmacenFirebase {
   }
   async actualizarArchivo(id, parcial) {
     await this.fs.updateDoc(this.fs.doc(this.col, id), { ...limpio(parcial), actualizado: this.fs.serverTimestamp(), actualizadoPor: this.correo });
+  }
+  async organizarArchivos(cambios) {
+    const lote = this.fs.writeBatch(this.db);
+    for (const { id, parcial } of cambios) lote.update(this.fs.doc(this.col, id), limpio(parcial));
+    await lote.commit();
   }
   async eliminarArchivo(id) {
     const fs = this.fs;
